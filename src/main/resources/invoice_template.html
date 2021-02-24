@@ -1,0 +1,109 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <link th:href="@{https://use.typekit.net/usq5jdr.css}" rel='stylesheet' type='text/css' />
+    <body>
+        <img th:src="@{${img}}" width="40%"/>
+        <h1 style="margin-top: 12%; font-family: proxima-nova, sans-serif; color: #0061ff;" th:text="${invoiceName}"></h1>
+
+        <div style="">
+            <div style="float: left">
+                <h3 style="font-family: proxima-nova, sans-serif; color: #5b6987; margin-top: 5%">From</h3>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${issuerName}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${issuerAddress}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${issuerEmail}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${vatId}"></span>
+            </div>
+            <div style="float: right; text-align: right;">
+                <h3 style="font-family: proxima-nova, sans-serif; color: #5b6987; margin-top: 5%">To</h3>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${recName}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${recAddress}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${recEmail}"></span>
+            </div>
+        </div>
+
+        <div style="clear: both"></div>
+        <h3 style="font-family: proxima-nova, sans-serif; color: #5b6987; margin-top: 5%">Details</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987; text-align: left;">Invoice number</th>
+                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987; text-align: left;">Date of issue</th>
+                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987; text-align: right;">Payment due on</th>
+            </tr>
+            <tr>
+                <th style="border: 1px solid #ddd; padding: 8px; font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987; text-align: left;" th:text="'160' + ${id} + '081'"></th>
+                <th style="border: 1px solid #ddd; padding: 8px; font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987; text-align: left;" th:text="${issuedAt}"></th>
+                <th style="border: 1px solid #ddd; padding: 8px; font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987; text-align: right;" th:text="${payUntil}"></th>
+            </tr>
+        </table>
+
+
+        <h2 style="margin-top: 8%; font-family: proxima-nova, sans-serif; color: #0061ff;">Summary</h2>
+        <hr style="margin-top: 2%; margin-bottom: 5%; border: none; border-bottom: 5px solid #0061ff;" />
+
+        <div style="margin-top: 5%; margin-bottom: 2.5%">
+            <table style="width: 100%;">
+                <tr style="margin-bottom: 2%">
+                    <th style="font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987;">SERVICE</th>
+                    <th style="font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987;">DESCRIPTION</th>
+                    <th style="font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987;">PRICE</th>
+                    <th style="text-align: right; font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987;">QTY</th>
+                    <th style="text-align: right; font-weight: bold; font-family: proxima-nova, sans-serif; color: #5b6987;">TOTAL</th>
+                </tr>
+                <tr th:each="obj : ${positions}">
+                    <td style="font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${obj.uniqueCode}"></td>
+                    <td style="font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${obj.description}"></td>
+                    <td style="font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="'€ ' + ${#numbers.formatDecimal(obj.unitPrice, 0, 'COMMA', 2, 'POINT')}"></td>
+                    <td style="text-align: right; font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="${obj.num} + ' ' + ${obj.unit}"></td>
+                    <td style="text-align: right; font-weight: 100; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="'€ ' + ${#numbers.formatDecimal(obj.totalPriceWithoutVat, 0, 'COMMA', 2, 'POINT')}"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="clear: both"></div>
+        <div style="margin-top: 2.5%"></div>
+        <hr style="margin-top: 2.5%; margin-bottom: 2.5%; border: none; border-bottom: 1px dotted #5b6987; width: 100%" />
+
+        <div style="margin-top: 0%; margin-bottom: 2.5%">
+            <div style="float: left">
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;">Subtotal</span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;">VAT 20%</span>
+            </div>
+            <div style="float: right">
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="'€ ' + ${#numbers.formatDecimal(totalPriceWithoutVat, 0, 'COMMA', 2, 'POINT')}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="'€ ' + ${#numbers.formatDecimal(vatTotal, 0, 'COMMA', 2, 'POINT')}"></span>
+            </div>
+        </div>
+        <div style="clear: both"></div>
+        <div style="margin-top: 2.5%"></div>
+        <hr style="margin-top: 2.5%; margin-bottom: 2.5%; border: none; border-bottom: 1px dotted #5b6987; width: 100%" />
+        <div>
+            <div style="float: left">
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;">Total</span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;">Amount Due</span>
+            </div>
+            <div style="float: right">
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="'€ ' + ${#numbers.formatDecimal(totalPriceWithVat, 0, 'COMMA', 2, 'POINT')}"></span>
+                <span style="font-weight: 100; display: block; font-family: proxima-nova, sans-serif; color: #5b6987;" th:text="'€ ' + ${#numbers.formatDecimal(totalPriceWithVat, 0, 'COMMA', 2, 'POINT')}"></span>
+            </div>
+        </div>
+
+        <div style="clear: both"></div>
+        <div style="margin-top: 5%"></div>
+        <div style="color: #5b6987; font-family: proxima-nova, sans-serif; margin-top: 5%; font-size: 80%; font-style: italic" th:text="'Bank connection: ' + ${issuerIban}"></div>
+
+        <div style="color: #5b6987; font-family: proxima-nova, sans-serif; margin-top: 1%; font-size: 80%; font-style: italic">This invoice was automatically created and is valid without the signature and seal.</div>
+        <div style="font-family: proxima-nova, sans-serif; margin-top: 4%; font-size: 80%;">Thank you! Your Skyrocket Agency</div>
+        <div style="font-family: proxima-nova, sans-serif; font-size: 80%;">skyrocket.at | office@skyrocket.at | 0660 5056961</div>
+
+        <h2 style="margin-top: 8%; font-family: proxima-nova, sans-serif; color: #0061ff;">APPENDIX</h2>
+        <p style="color: #5b6987; font-family: proxima-nova, sans-serif; margin-top: 1%;">
+            <b>(1) Delivery terms</b> <br></br>
+            The service is delivered in its digital format or via an active domain. Active domains are domains that point to a public internet site corresponding to the services
+            sales contract and having at least one month of persistent availability. Persistent availability must be due to third party involvement discussed with the ISP (= Internet service provider)
+            who is in charge of deploying the deliverables.<br></br><br></br>
+
+            <b>(2) Warranty and gurantee</b> <br></br>
+            Warranty and gurantee does not apply to the service.
+        </p>
+
+    </body>
+</html>
