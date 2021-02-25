@@ -13,12 +13,15 @@ import com.skyrocket.invoicer.model.InvoicePosition;
 import com.skyrocket.invoicer.repository.InvoicePositionRepository;
 import com.skyrocket.invoicer.repository.InvoiceRepository;
 import com.skyrocket.invoicer.util.InvoicePdfUtil;
+import com.skyrocket.invoicer.util.mail.MailSender;
+import com.skyrocket.invoicer.util.mail.RecipientList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -42,6 +45,9 @@ public class InvoiceService {
 
     @Autowired
     private InvoicePdfUtil invoicePdfUtil;
+
+    @Autowired
+    private MailSender mailSender;
 
     private final String ISSUER_LOGO = "https://github.com/momtr/skyrocket-agency/blob/master/static/graphics/logo_primary.png?raw=true";
     private final String ISSUER_NAME = "Skyrocket Agency GmbH";
@@ -115,6 +121,17 @@ public class InvoiceService {
     public byte[] generatePdfForInvoice(long id) throws InvoiceDoesNotExistException, IOException, DocumentException {
         Invoice invoice = findInvoice(id);
         return invoicePdfUtil.generatePdfForInvoice(invoice);
+    }
+
+    public void sendInvoiceViaEmail(String recipient, long invoiceId) throws InvoiceDoesNotExistException {
+        Invoice invoice = findInvoice(invoiceId);
+        RecipientList recipientList = new RecipientList();
+        recipientList.addRecipient(recipient);
+        try {
+            mailSender.sendMessage(recipientList, "Hello World", "<div style=\"color: red;\">The mail's content</div>");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
     private long saveInvoice(Invoice invoice) {

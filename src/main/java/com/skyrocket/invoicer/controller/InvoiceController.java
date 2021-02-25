@@ -71,8 +71,14 @@ public class InvoiceController {
 
     @GetMapping(value = "/{invoiceId}/download", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> downloadfInvoicePdf(@PathVariable("invoiceId") long invoiceId) throws DocumentException, InvoiceDoesNotExistException, IOException {
-        log.info("received requrest to download invoice with id [{}]", invoiceId);
+        log.info("received request to download invoice with id [{}]", invoiceId);
         return ResponseEntity.ok(invoiceService.generatePdfForInvoice(invoiceId));
+    }
+
+    @PostMapping(value = "/{invoiceId}/mail", produces = MediaType.APPLICATION_PDF_VALUE)
+    public void sendCurrentEmailViaMail(@PathVariable("invoiceId") long invoiceId, @RequestParam(required = true, name = "mailto") String recipient) throws DocumentException, InvoiceDoesNotExistException, IOException {
+        log.info("received request to mail invoice with id [{}] to [{}]", invoiceId, recipient);
+        invoiceService.sendInvoiceViaEmail(recipient, invoiceId);
     }
 
 }

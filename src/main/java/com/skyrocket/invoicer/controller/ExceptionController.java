@@ -1,6 +1,7 @@
 package com.skyrocket.invoicer.controller;
 
 import com.skyrocket.invoicer.exception.InvoiceDoesNotExistException;
+import com.skyrocket.invoicer.exception.MailNotSendableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -40,6 +41,15 @@ public class ExceptionController {
         Map<String, String> map = new HashMap<>();
         map.put("error", ex.getMessage());
         map.put("type", "INVOICE_DOES_NOT_EXIST");
+        return map;
+    }
+
+    @ExceptionHandler(MailNotSendableException.class)
+    public Map<String, String> handleMailNotSendableException(MailNotSendableException ex) {
+        log.info("EXC mailNotSendable [{}]", ex.getMessage());
+        Map<String, String> map = new HashMap<>();
+        map.put("error", ex.getMessage());
+        map.put("type", "MAIL_NOT_SENDABLE");
         return map;
     }
 
